@@ -139,6 +139,7 @@ import qualified Data.Text                     as Text
 import qualified Data.Text.Encoding            as TE
 import           Data.Type.Bool
                  (If)
+import           Data.Kind (Type)
 import           GHC.TypeLits
                  (KnownSymbol, TypeError, symbolVal)
 import           Network.URI
@@ -649,7 +650,7 @@ simpleToLink _ toA _ = toLink toA (Proxy :: Proxy sub)
 -- Erroring instance for 'HasLink' when a combinator is not fully applied
 instance TypeError (PartialApplication HasLink arr) => HasLink ((arr :: a -> b) :> sub)
   where
-    type MkLink (arr :> sub) _ = TypeError (PartialApplication HasLink arr)
+    type MkLink (arr :> sub) _ = TypeError (PartialApplication (HasLink :: Type -> Constraint) arr)
     toLink = error "unreachable"
 
 -- Erroring instances for 'HasLink' for unknown API combinators
